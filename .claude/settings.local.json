@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(python -c \"from torven.lexer import make_lexer; lx = make_lexer\\(\\); list\\(lx.tokenize\\('load x@torq => 5\\\\n'\\)\\); print\\('Lexer OK'\\)\")"
+    ],
+    "additionalDirectories": [
+      "c:\\TORVEN\\torven"
+    ]
+  }
+}
