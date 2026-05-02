@@ -1,0 +1,46 @@
+# hola.trv — TORVEN showcase: variables, functions, loops, conditionals, vent
+
+# ---------- function definitions ----------
+
+forge saludar(nombre@exhaust):
+    vent "Hola desde TORVEN,"
+    vent nombre
+
+forge cuadrado(n@torq):
+    load resultado@torq => n ^^ 2
+    eject resultado
+
+forge clasificar(n@torq):
+    ignite n ~~ 0:
+        eject "cero"
+    drift ignite n > 0:
+        eject "positivo"
+    drift:
+        eject "negativo"
+
+# ---------- main program ----------
+
+saludar("mundo")
+
+load numeros@barrel => [1, 2, 3, 4, 5]
+
+vent "--- cuadrados ---"
+burn n in numeros:
+    load q@torq => cuadrado(n)
+    vent q
+
+vent "--- clasificacion ---"
+load valores@barrel => [-3, 0, 7]
+burn v in valores:
+    load etiqueta@exhaust => clasificar(v)
+    vent etiqueta
+
+# ---------- while loop ----------
+load contador@torq => 0
+rev contador < 3:
+    vent contador
+    contador => contador + 1
+
+# ---------- const ----------
+lock PI@venom => 3.14159
+vent PI
