@@ -3,12 +3,24 @@
 # ---------- function definitions ----------
 
 forge saludar(nombre@exhaust):
-    vent "Hola desde TORVEN,"
+    vent"Hola desde TORVEN,"
     vent nombre
+
+forge prueba(prueba@exhaust):
+    vent "esta es una prueba,"
+    vent prueba
+    
+forge test(test@exhaust):
+    vent "test_1,"
+    vent test
 
 forge cuadrado(n@torq):
     load resultado@torq => n ^^ 2
     eject resultado
+
+forge numero(m@torq):
+    load res@torq => m * 15
+    eject res
 
 forge clasificar(n@torq):
     ignite n ~~ 0:
@@ -21,6 +33,8 @@ forge clasificar(n@torq):
 # ---------- main program ----------
 
 saludar("mundo")
+prueba( "en TORVEN" )
+test( "Bienvenidos a TORVEN" )
 
 load numeros@barrel => [1, 2, 3, 4, 5]
 
@@ -28,6 +42,12 @@ vent "--- cuadrados ---"
 burn n in numeros:
     load q@torq => cuadrado(n)
     vent q
+
+
+vent "--- numeros ---"
+burn m in numeros:
+    load a@torq => numero(m)
+    vent a
 
 vent "--- clasificacion ---"
 load valores@barrel => [-3, 0, 7]
@@ -44,3 +64,4 @@ rev contador < 3:
 # ---------- const ----------
 lock PI@venom => 3.14159
 vent PI
+

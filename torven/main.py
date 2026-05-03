@@ -95,6 +95,23 @@ def cmd_ast(src_path: str):
     pprint.pprint(ast)
 
 
+def cmd_gui(_path: str = ""):
+    """Launch the graphical IDE."""
+    from torven.gui import launch
+    launch()
+
+
+def cmd_tree(src_path: str):
+    """Generate graphical AST PNG images for *src_path*."""
+    try:
+        from torven.visualizer import visualize
+    except ImportError as e:
+        _die(f"matplotlib is required for tree visualization: pip install matplotlib\n{e}")
+    if not src_path.endswith(".trv"):
+        _die("tree command requires a .trv source file")
+    visualize(src_path)
+
+
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
@@ -152,31 +169,45 @@ def _die(message: str):
 
 USAGE = """\
 Usage:
+  torven gui                          Launch graphical IDE
   torven compile  <file.trv>          Compile to bytecode (.tvbc)
   torven run      <file.tvbc>         Run bytecode
   torven exec     <file.trv>          Compile + run
   torven disasm   <file.trv|.tvbc>    Disassemble bytecode
   torven tokens   <file.trv>          Dump token stream
-  torven ast      <file.trv>          Dump AST
+  torven ast      <file.trv>          Dump AST (text)
+  torven tree     <file.trv>          Generate AST PNG images
 """
 
 
 def main():
     args = sys.argv[1:]
-    if len(args) < 2:
+    if not args:
         print(USAGE)
         sys.exit(0)
 
     cmd  = args[0].lower()
+
+    # gui no necesita argumento de archivo
+    if cmd == "gui":
+        cmd_gui()
+        return
+
+    if len(args) < 2:
+        print(USAGE)
+        sys.exit(0)
+
     path = args[1]
 
     dispatch = {
+        "gui":     cmd_gui,
         "compile": cmd_compile,
         "run":     cmd_run,
         "exec":    cmd_exec,
         "disasm":  cmd_disasm,
         "tokens":  cmd_tokens,
         "ast":     cmd_ast,
+        "tree":    cmd_tree,
     }
 
     if cmd not in dispatch:

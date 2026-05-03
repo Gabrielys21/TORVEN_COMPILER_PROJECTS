@@ -8,27 +8,30 @@
 ## Índice
 
 1. [¿Cómo correr un programa?](#1-cómo-correr-un-programa)
-2. [Variables](#2-variables)
-3. [Tipos de dato](#3-tipos-de-dato)
-4. [Operadores](#4-operadores)
-5. [Imprimir en pantalla (vent)](#5-imprimir-en-pantalla-vent)
-6. [Condicionales (ignite / drift)](#6-condicionales-ignite--drift)
-7. [Bucle while (rev)](#7-bucle-while-rev)
-8. [Bucle for (burn)](#8-bucle-for-burn)
-9. [Funciones (forge)](#9-funciones-forge)
-10. [Listas (barrel)](#10-listas-barrel)
-11. [Diccionarios (chassis)](#11-diccionarios-chassis)
-12. [El operador pipe (->)](#12-el-operador-pipe--)
-13. [Manejo de errores (stall / redline)](#13-manejo-de-errores-stall--redline)
-14. [Constantes (lock)](#14-constantes-lock)
-15. [Tabla de referencia rápida](#15-tabla-de-referencia-rápida)
-16. [Programa de ejemplo completo](#16-programa-de-ejemplo-completo)
+2. [Interfaz gráfica (GUI)](#2-interfaz-gráfica-gui)
+3. [Variables](#3-variables)
+4. [Tipos de dato](#4-tipos-de-dato)
+5. [Operadores](#5-operadores)
+6. [Imprimir en pantalla (vent)](#6-imprimir-en-pantalla-vent)
+7. [Condicionales (ignite / drift)](#7-condicionales-ignite--drift)
+8. [Bucle while (rev)](#8-bucle-while-rev)
+9. [Bucle for (burn)](#9-bucle-for-burn)
+10. [Funciones (forge)](#10-funciones-forge)
+11. [Listas (barrel)](#11-listas-barrel)
+12. [Diccionarios (chassis)](#12-diccionarios-chassis)
+13. [El operador pipe (->)](#13-el-operador-pipe--)
+14. [Manejo de errores (stall / redline)](#14-manejo-de-errores-stall--redline)
+15. [Constantes (lock)](#15-constantes-lock)
+16. [Tabla de referencia rápida](#16-tabla-de-referencia-rápida)
+17. [Programa de ejemplo completo](#17-programa-de-ejemplo-completo)
 
 ---
 
 ## 1. ¿Cómo correr un programa?
 
-Guarda tu código en un archivo con extensión `.trv` y usa uno de estos comandos:
+Guarda tu código en un archivo con extensión `.trv` y usa uno de estos comandos desde la terminal:
+
+### Comandos principales
 
 ```bash
 # Compilar Y ejecutar en un solo paso (el más cómodo)
@@ -41,14 +44,99 @@ python -m torven.main compile mi_programa.trv
 python -m torven.main run mi_programa.tvbc
 ```
 
-> **Tip de debug:** Si algo sale mal puedes ver exactamente qué tokens generó tu código:
-> ```bash
-> python -m torven.main tokens mi_programa.trv
-> ```
+### Comandos de depuración
+
+```bash
+# Ver los tokens que genera el lexer (útil para entender errores de sintaxis)
+python -m torven.main tokens mi_programa.trv
+
+# Ver el AST (Árbol de Sintaxis Abstracta) en texto
+python -m torven.main ast mi_programa.trv
+
+# Ver el bytecode desensamblado (instrucciones de la VM)
+python -m torven.main disasm mi_programa.trv
+python -m torven.main disasm mi_programa.tvbc   # también funciona con .tvbc
+```
+
+### Visualización gráfica del AST
+
+```bash
+# Genera imágenes PNG del árbol AST en la misma carpeta que el archivo
+python -m torven.main tree mi_programa.trv
+```
+
+Esto crea imágenes como `mi_programa_estructura.png`, `mi_programa_main.png` y una imagen por cada función `forge` que definas.
+
+### Abrir la interfaz gráfica
+
+```bash
+python -m torven.main gui
+```
 
 ---
 
-## 2. Variables
+## 2. Interfaz gráfica (GUI)
+
+TORVEN incluye un IDE visual con tema oscuro. Para abrirlo:
+
+```bash
+python -m torven.main gui
+```
+
+### Partes de la interfaz
+
+```
+┌─────────────────────────────────────────────────┐
+│  TORVEN  [COMPILAR F5] [EJECUTAR F6] [COMP+RUN F7]│  ← barra superior
+├──────────────────┬──────────────────────────────┤
+│                  │ SALIDA │ BYTECODE │ TOKENS │ ÁRBOL AST │
+│   EDITOR         ├──────────────────────────────┤
+│   (escribe tu    │                              │
+│    código aquí)  │   Panel de resultados        │
+│                  │                              │
+├──────────────────┴──────────────────────────────┤
+│  INACTIVO │  0 líneas · 0 caracteres            │  ← barra inferior
+└─────────────────────────────────────────────────┘
+```
+
+### Tabs del panel derecho
+
+| Tab | Qué muestra |
+|-----|-------------|
+| **SALIDA** | Lo que imprime `vent` al ejecutar |
+| **BYTECODE** | Las instrucciones compiladas de la VM |
+| **TOKENS** | La lista de tokens que genera el lexer |
+| **ÁRBOL AST** | Imágenes del árbol de sintaxis (necesitas `matplotlib`) |
+
+### Atajos de teclado
+
+| Atajo | Acción |
+|-------|--------|
+| `F5` | Compilar (genera `.tvbc`) |
+| `F6` | Ejecutar bytecode compilado |
+| `F7` | Compilar + ejecutar en un paso |
+| `Ctrl+N` | Nuevo archivo |
+| `Ctrl+O` | Abrir archivo `.trv` |
+| `Ctrl+S` | Guardar archivo |
+
+### El indicador de estado (Motor)
+
+La esquina inferior izquierda muestra el estado de ejecución:
+
+- **INACTIVO** (gris) — no hay nada corriendo
+- **EJECUTANDO** (verde parpadeante) — el programa está corriendo
+- **COMPLETADO** (verde) — terminó sin errores
+- **ERROR** (rojo) — algo falló, revisa la pestaña SALIDA
+
+> **Nota:** Para ver los árboles AST en la pestaña **ÁRBOL AST** necesitas tener `matplotlib` instalado:
+> ```bash
+> pip install matplotlib
+> ```
+> Después usa el botón **COMPILAR (F5)** — las imágenes se generan automáticamente.
+
+---
+
+## 3. Variables
 
 En TORVEN hay dos tipos de variables:
 
@@ -97,7 +185,7 @@ puntos => 50
 
 ---
 
-## 3. Tipos de dato
+## 4. Tipos de dato
 
 | Nombre TORVEN | Qué es         | Ejemplo de valor       |
 |---------------|----------------|------------------------|
@@ -121,7 +209,7 @@ load lista@barrel   => [10, 20, 30]
 
 ---
 
-## 4. Operadores
+## 5. Operadores
 
 ### Aritméticos
 
@@ -163,7 +251,7 @@ ignite x >= 5:
 
 ---
 
-## 5. Imprimir en pantalla (vent)
+## 6. Imprimir en pantalla (vent)
 
 `vent` es el equivalente a `print`. Imprime lo que sea que le pongas.
 
@@ -190,7 +278,7 @@ vent x ^^ 3
 
 ---
 
-## 6. Condicionales (ignite / drift)
+## 7. Condicionales (ignite / drift)
 
 ### Solo if
 
@@ -250,7 +338,7 @@ drift:
 
 ---
 
-## 7. Bucle while (rev)
+## 8. Bucle while (rev)
 
 `rev` repite el bloque mientras la condición sea verdadera.
 
@@ -310,7 +398,7 @@ Salida: `0 1 2 3 4`
 
 ---
 
-## 8. Bucle for (burn)
+## 9. Bucle for (burn)
 
 `burn` itera sobre una lista o rango.
 
@@ -367,7 +455,7 @@ Salida: `1 4 9 16 25`
 
 ---
 
-## 9. Funciones (forge)
+## 10. Funciones (forge)
 
 Las funciones se declaran con `forge` y devuelven valores con `eject`.
 
@@ -469,7 +557,7 @@ Salida: `25`
 
 ---
 
-## 10. Listas (barrel)
+## 11. Listas (barrel)
 
 Las listas son colecciones ordenadas de valores.
 
@@ -510,7 +598,7 @@ burn n in nums:
 
 ---
 
-## 11. Diccionarios (chassis)
+## 12. Diccionarios (chassis)
 
 Los diccionarios guardan pares `clave: valor`.
 
@@ -531,7 +619,7 @@ burn clave in config:
 
 ---
 
-## 12. El operador pipe (->)
+## 13. El operador pipe (->)
 
 El operador `->` pasa el resultado de una expresión como argumento a la siguiente función. Es como una cadena de transformaciones.
 
@@ -593,7 +681,7 @@ Salida: `-1 -2 -3`
 
 ---
 
-## 13. Manejo de errores (stall / redline)
+## 14. Manejo de errores (stall / redline)
 
 ### stall = try / except
 
@@ -620,7 +708,7 @@ vent dividir(10, 2)
 
 ---
 
-## 14. Constantes (lock)
+## 15. Constantes (lock)
 
 `lock` declara una variable que NO puede cambiar después.
 
@@ -642,7 +730,7 @@ MAX => 200        # ERROR: no puedes modificar una constante lock
 
 ---
 
-## 15. Tabla de referencia rápida
+## 16. Tabla de referencia rápida
 
 ### Keywords
 
@@ -680,7 +768,7 @@ MAX => 200        # ERROR: no puedes modificar una constante lock
 
 ---
 
-## 16. Programa de ejemplo completo
+## 17. Programa de ejemplo completo
 
 Este programa usa todo lo aprendido:
 

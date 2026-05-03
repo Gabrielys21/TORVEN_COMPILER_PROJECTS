@@ -112,7 +112,7 @@ class TorvenLexer:
 
     tokens = tokens
 
-    # --- simple operator rules (string or regex) --------------------------
+    # --- Regular Expressions (string or regex) --------------------------
 
     t_ASSIGN   = r'=>'
     t_EQ       = r'~~'

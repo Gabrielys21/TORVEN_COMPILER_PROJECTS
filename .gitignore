@@ -1,0 +1,34 @@
+# ── Archivos privados / de presentación (no van al repo público) ──────────────
+DOCUMENTACION.md
+PRESENTACION.md
+
+# ── Claude Code ───────────────────────────────────────────────────────────────
+.claude/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ── PLY (generados automáticamente) ───────────────────────────────────────────
+parser.out
+parsetab.py
+
+# ── Bytecode TORVEN ────────────────────────────────────────────────────────────
+*.tvbc
+
+# ── Imágenes AST generadas ────────────────────────────────────────────────────
+torven/examples/*_ast.png
+torven/examples/*_estructura.png
+torven/examples/*_main.png
+torven/examples/*_func_*.png
+
+# ── Entornos virtuales ────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
